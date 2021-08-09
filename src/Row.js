@@ -4,7 +4,7 @@ import "./Row.css";
 import YouTube from "react-youtube";
 import movieTrailer from "movie-trailer";
 
-const base_url = "https://image.tmdb.org/t/p/original/";
+const base_url = process.env.REACT_APP_BASE_URL;
 
 function Row({ title, fetchUrl, isLargeRow }) {
 	const [movies, setMovies] = useState([]);
@@ -12,7 +12,6 @@ function Row({ title, fetchUrl, isLargeRow }) {
 	useEffect(() => {
 		async function fetchData() {
 			const request = await axios.get(fetchUrl);
-			// console.log(request.data.results);
 			setMovies(request.data.results);
 			return request;
 		}
@@ -30,7 +29,7 @@ function Row({ title, fetchUrl, isLargeRow }) {
 		if (trailerUrl) {
 			setTrailerUrl("");
 		} else {
-			movieTrailer(movie?.title || "")
+			movieTrailer(movie?.original_name || movie?.title || "")
 				.then((url) => {
 					const urlParams = new URLSearchParams(new URL(url).search);
 					setTrailerUrl(urlParams.get("v"));
